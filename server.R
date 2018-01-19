@@ -66,35 +66,16 @@ shinyServer(function(input, output, session) {
   osSystem <- Sys.info()["sysname"]
   
   volumes <- list()
-  
-  if (osSystem == "Linux") {
-    media <- list.files("/media", full.names = T)
-    names(media) = basename(media)
-    volumes <- c(media)
-  } else
-    if (osSystem == "Windows") {
-      volumes <- system("wmic logicaldisk get Caption", intern = T)
-      volumes <- sub(" *\\r$", "", volumes)
-      keep <- !tolower(volumes) %in% c("caption", "")
-      volumes <- volumes[keep]
-      volNames <- system("wmic logicaldisk get VolumeName",
-                         intern = T)
-      volNames <- sub(" *\\r$", "", volNames)
-      volNames <- volNames[keep]
-      volNames <- paste0(volNames, ifelse(volNames == "", "",
-                                          " "))
-      volNames <- paste0(volNames, "(", volumes, ")")
-      names(volumes) <- volNames
-    }
+  media <- list.files("/media", full.names = T)
+  names(media) = basename(media)
+  volumes <- c(media)
   
   volumes <- c('Home' = Sys.getenv("HOME"),
                volumes)
   
   my_zip_tools <- Sys.getenv("R_ZIPCMD", "zip")
   
-  if (osSystem == "Windows") {
-    my_zip_tools <- c("C:/Rtools/bin/zip.exe")
-  }
+ 
   
   ##################################################################################################################################
   ############### Select input file (raster OR vector)
@@ -308,7 +289,7 @@ shinyServer(function(input, output, session) {
   output$StartZonal <- renderUI({
     req(input$attr_zones)
     req(input$map_file)
-    actionButton('zonalStartButton', textOutput('t3_b1_button'))
+    actionButton('zonalStartButton', textOutput('zonal_button'))
   })
   
   ##################################################################################################################################

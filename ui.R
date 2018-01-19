@@ -75,7 +75,7 @@ shinyUI(
                   ####################################################################################
                   # New box
                   box(
-                    title= textOutput('t1_b0_title'), width=4,status = "success", solidHeader= TRUE,
+                    title= textOutput('title_language'), width=4,status = "success", solidHeader= TRUE,
                     selectInput(
                       'language','',choices = c("English","Français","Español")),
                     uiOutput("chosen_language")
@@ -84,15 +84,16 @@ shinyUI(
                   ####################################################################################
                   # New box
                   box(
-                    title= textOutput('t1_b1_title'), width=4,status = "success", solidHeader= TRUE,
-                    htmlOutput('t1_b1_body')
+                    title= textOutput('title_description'), width=4,status = "success", solidHeader= TRUE,
+                    htmlOutput('body_description')
                   ),
                   
                   ####################################################################################
                   # New box
                   box(
-                    title= textOutput('t2_b2_title'), width=4,status = "success", solidHeader= TRUE,
-                    actionButton("download_test_button",textOutput('download_testdata_button')),
+                    title= textOutput('title_download_testdata'), width=4,status = "success", solidHeader= TRUE,
+                    actionButton("download_test_button",
+                                 textOutput('download_testdata_button')),
                     uiOutput("dynUI_download_test")
                   )
                   
@@ -103,31 +104,34 @@ shinyUI(
                 fluidRow(
                   ####################################################################################
                   # New box
-                  box(title= textOutput('t1_b2_title'),width=6, status = "success", solidHeader= TRUE,
-                      htmlOutput('t1_b2_body'),
+                  box(title= textOutput('title_map_input'),width=6, status = "success", solidHeader= TRUE,
+                      htmlOutput('body_map_input'),
                       shinyFilesButton(id = 'map_file',
-                                       label = "Input thematic map (raster)",  #htmlOutput('t2_b1_button'), TO TRY TO IMPLEMENT
-                                       title = "Browse", #htmlOutput('select_a_file'),
+                                       label = "Input thematic map (raster)",  
+                                       title = "Browse", 
                                        multiple = FALSE),
                       br(),
                       textOutput("map_file_path"),
                       br(),
-                      htmlOutput('t1_b5_body'),
-                      br(),
-                      textOutput("outdirpath")
+                      htmlOutput('body_output_dir'),
+                      textOutput("outdirpath"),
+                      checkboxInput("IsWithZones",
+                                    label = textOutput("box_with_zones"))
                   ),
                   
                   ####################################################################################
                   # New box
-                  box(title= textOutput('t1_b3_title'),width=6, status = "success", solidHeader= TRUE,
-                      htmlOutput('t1_b3_body'),
-                      shinyFilesButton(id = 'zone_file',
-                                       label = "Input zones (vector or raster)",  #htmlOutput('t2_b1_button'), TO TRY TO IMPLEMENT
-                                       title = "Browse", #htmlOutput('select_a_file'),
-                                       multiple = FALSE),
-                      br(),
-                      textOutput("zone_file_path"),
-                      uiOutput("selectUI_attr_zones")
+                  conditionalPanel("is.null(input.IsWithZones)==F",
+                                   box(title= textOutput('title_vector_input'),width=6, status = "success", solidHeader= TRUE,
+                                       htmlOutput('body_vector_input'),
+                                       shinyFilesButton(id = 'zone_file',
+                                                        label = "Input zones (vector or raster)",  #htmlOutput('t2_b1_button'), TO TRY TO IMPLEMENT
+                                                        title = "Browse", #htmlOutput('select_a_file'),
+                                                        multiple = FALSE),
+                                       br(),
+                                       textOutput("zone_file_path"),
+                                       uiOutput("selectUI_attr_zones")
+                                   )
                   )
                   
                 ),
@@ -137,7 +141,7 @@ shinyUI(
                 fluidRow(
                   ####################################################################################
                   # New box
-                  box(title=textOutput('t1_b5_title'),width=12,status = "success", solidHeader= TRUE,
+                  box(title=textOutput('title_zonal_result'),width=12,status = "success", solidHeader= TRUE,
                       uiOutput("StartZonal"),
                       dataTableOutput("show_table"),
                       uiOutput("ui_download_csv")
@@ -152,9 +156,9 @@ shinyUI(
                 fluidRow(
                   ####################################################################################
                   # New box
-                  box(title=textOutput('t1_b4_p1_title'),width=12,status = "success", solidHeader= TRUE,
+                  box(title=textOutput('title_disclaimer'),width=12,status = "success", solidHeader= TRUE,
                       br(),
-                      htmlOutput('t1_b4_p1_body'),
+                      htmlOutput('body_disclaimer'),
                       br(),
                       br(),
                       img(src="thumbnails/sepal-logo-EN-white.jpg", height = 100, width = 210),
