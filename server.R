@@ -75,7 +75,7 @@ shinyServer(function(input, output, session) {
   
   my_zip_tools <- Sys.getenv("R_ZIPCMD", "zip")
   
- 
+  
   
   ##################################################################################################################################
   ############### Select input file (raster OR vector)
@@ -155,7 +155,7 @@ shinyServer(function(input, output, session) {
       zoneType <- 'raster_type'
     } else
       if (ending %in% vector_type) {
-      zoneType <- 'vector_type'
+        zoneType <- 'vector_type'
       }
     zoneType
   })
@@ -321,12 +321,12 @@ shinyServer(function(input, output, session) {
     legend
   })
   
-
+  
   ################################# Display output directory path
   output$show_table = renderDataTable({
     zonal()
   })
-
+  
   ################################# Compute the zonal stats
   zonal <- reactive({
     req(legend())
@@ -335,17 +335,23 @@ shinyServer(function(input, output, session) {
     legend   <- legend()
     zones    <- zones()
     attr_nme <- input$attr_zones
-
+    
     df <- parseFilePaths(volumes, input$map_file)
     lcmap_name <- as.character(df[, "datapath"])
-
+    
     ######################### Compute Zonal stats
-    system(sprintf("python www/scripts/oft-zonal_large_list.py -i %s -um %s -o %s -a %s",
-                   lcmap_name,
-                   paste0(outdir(),"/","zonal.shp"),
-                   paste0(outdir(),"/","stats.txt"),
-                   "zonal_code"
-    ))
+    withProgress(message = 'Computing the zonal stats, be patient',
+                 value = 0,
+                 {
+                   setProgress(value = .1)
+                   
+                   system(sprintf("python www/scripts/oft-zonal_large_list.py -i %s -um %s -o %s -a %s",
+                                  lcmap_name,
+                                  paste0(outdir(),"/","zonal.shp"),
+                                  paste0(outdir(),"/","stats.txt"),
+                                  "zonal_code"
+                   ))
+                 })
     
     ######################### Read Zonal stats
     df <- read.table(paste0(outdir(),"/","stats.txt"))
