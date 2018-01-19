@@ -340,7 +340,7 @@ shinyServer(function(input, output, session) {
     lcmap_name <- as.character(df[, "datapath"])
 
     ######################### Compute Zonal stats
-    system(sprintf("python www/scripts/oft-zonal_large_list.py -i %s -um %s -o %s -a %s",
+    system(sprintf("python www/scripts/oft-zonal_large_list2.py -i %s -um %s -o %s -a %s",
                    lcmap_name,
                    paste0(outdir(),"/","zonal.shp"),
                    paste0(outdir(),"/","stats.txt"),
